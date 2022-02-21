@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,6 +46,19 @@ namespace ABHelper
         public static string GetPackagePath(string path)
         {
             return Application.streamingAssetsPath + "/" + path;
+        }
+        //取文件的时候,如果streamingAssetsPath没有的话去persistentDataPath查找
+        public static string GetFilePath(string path)
+        {
+            var nativePath = GetNativePath(path);
+            if(File.Exists(path))//如果persistentDataPath存在
+            {
+                return nativePath;
+            }
+            else
+            {
+                return GetPackagePath(path);
+            }
         }
 
         private static string _CurrentPlatformName;

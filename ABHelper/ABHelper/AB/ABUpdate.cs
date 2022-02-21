@@ -49,6 +49,7 @@ namespace ABHelper
             WebAsset webAsset = null;
             webAsset = WebAssetManager.Load(Config.GetServerPath(_RootURL, Config.VersionFileName), (msg)=>
             {
+                //远端的version文件
                 var text = (string)msg;
                 Dictionary<string, string> newABVersions = new Dictionary<string, string>();
                 text = text.Replace("\r", "");
@@ -59,11 +60,23 @@ namespace ABHelper
                     if(version.Length > 1 && version[0] != Config.VersionFileName) //对比文件差异时排除version文件
                         newABVersions[version[0]] = version[1];
                 }
-
+                //已经更新过的version文件
                 Dictionary<string, string> nativeABVersions = new Dictionary<string, string>();
                 var nativePath = Config.GetNativePath(Config.VersionFileName);
                 UtilsRuntime.TxtToDic(nativePath, nativeABVersions);
-
+                //打在包里的version文件
+                Dictionary<string, string> packageABVersions = new Dictionary<string, string>();
+                var packagePath = Config.GetPackagePath(Config.VersionFileName);
+                UtilsRuntime.TxtToDic(packagePath, packageABVersions);
+                //两边的version文件综合起来
+                foreach(var version in packageABVersions)
+                {
+                    if(!nativeABVersions.TryGetValue(version.Key, out string res))
+                    {
+                        nativeABVersions.Add(version.Key, version.Value);
+                    }
+                }
+                //筛查需要更新的文件
                 Dictionary<string, string> waitForUpdate = new Dictionary<string, string>();
                 UtilsRuntime.MakeFileSafe(nativePath);
                 StreamWriter swVersion = new StreamWriter(nativePath);

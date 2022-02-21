@@ -30,8 +30,6 @@ namespace ABHelper
     }
     public class ABManager
     {
-        private static string[] _PackageBuildedFoldArray = new string[0];
-        private static string[] _PackageBundleNameArray = new string[0];
         private static string[] _BuildedFoldArray   = new string[0];
         private static string[] _BundleNameArray    = new string[0];
         private static Dictionary<string, BundleInfo> _BundleReference = new Dictionary<string, BundleInfo>();
@@ -41,25 +39,19 @@ namespace ABHelper
         private static Dictionary<string, List<AssetInfo>> _AssetRelevanceBundle = new Dictionary<string, List<AssetInfo>>();
 
         private static AssetBundleManifest _AssetBundleManifest;
-
-        public static void InitWithPackage()
-        {
-            var buildedFolderFileName = Config.GetPackagePath(Config.BuildedFolderFileName);
-            _BuildedFoldArray = UtilsRuntime.TxtToList(buildedFolderFileName).ToArray();
-        }
         /// <summary>
         /// 读取全部的bundle已经bundle中的asset文件配置
         /// 便于在实例asset时加载对应的bundle
         /// </summary>
         public static void InitWithUpdate()
         {
-            var buildedFolderFileName = Config.GetNativePath(Config.BuildedFolderFileName);
+            var buildedFolderFileName = Config.GetFilePath(Config.BuildedFolderFileName);
             _BuildedFoldArray = UtilsRuntime.TxtToList(buildedFolderFileName).ToArray();
            
-            var bundleNameFile = Config.GetNativePath(Config.BundleNameFileName);
+            var bundleNameFile = Config.GetFilePath(Config.BundleNameFileName);
             _BundleNameArray = UtilsRuntime.TxtToList(bundleNameFile).ToArray();
 
-            var assetRelevanceBundleFile = Config.GetNativePath(Config.AssetRelevanceBundle);
+            var assetRelevanceBundleFile = Config.GetFilePath(Config.AssetRelevanceBundle);
             using (var s = new StreamReader(assetRelevanceBundleFile))
             {
                 string line;
@@ -85,7 +77,7 @@ namespace ABHelper
                 }
             }
 
-            AssetBundle abPlatform = AssetBundle.LoadFromFile(Config.GetNativePath(Config.CurrentPlatformName));
+            AssetBundle abPlatform = AssetBundle.LoadFromFile(Config.GetFilePath(Config.CurrentPlatformName));
             if (null != abPlatform)
             {
                 _AssetBundleManifest = abPlatform.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
@@ -219,7 +211,7 @@ namespace ABHelper
             }
             else
             {
-                res = AssetBundle.LoadFromFile(Config.GetNativePath(bundleName));
+                res = AssetBundle.LoadFromFile(Config.GetFilePath(bundleName));
                 info = new BundleInfo(res);
                 _BundleReference.Add(bundleName, info);
             }
