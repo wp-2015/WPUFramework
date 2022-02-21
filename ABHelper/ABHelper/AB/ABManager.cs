@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace ABHelper
@@ -12,6 +9,7 @@ namespace ABHelper
     {
         public int folderIndex;
         public int bundleIndex;
+        public bool isInPackage;
     }
     public class BundleInfo
     {
@@ -32,6 +30,8 @@ namespace ABHelper
     }
     public class ABManager
     {
+        private static string[] _PackageBuildedFoldArray = new string[0];
+        private static string[] _PackageBundleNameArray = new string[0];
         private static string[] _BuildedFoldArray   = new string[0];
         private static string[] _BundleNameArray    = new string[0];
         private static Dictionary<string, BundleInfo> _BundleReference = new Dictionary<string, BundleInfo>();
@@ -41,11 +41,17 @@ namespace ABHelper
         private static Dictionary<string, List<AssetInfo>> _AssetRelevanceBundle = new Dictionary<string, List<AssetInfo>>();
 
         private static AssetBundleManifest _AssetBundleManifest;
+
+        public static void InitWithPackage()
+        {
+            var buildedFolderFileName = Config.GetPackagePath(Config.BuildedFolderFileName);
+            _BuildedFoldArray = UtilsRuntime.TxtToList(buildedFolderFileName).ToArray();
+        }
         /// <summary>
         /// 读取全部的bundle已经bundle中的asset文件配置
         /// 便于在实例asset时加载对应的bundle
         /// </summary>
-        public static void Init()
+        public static void InitWithUpdate()
         {
             var buildedFolderFileName = Config.GetNativePath(Config.BuildedFolderFileName);
             _BuildedFoldArray = UtilsRuntime.TxtToList(buildedFolderFileName).ToArray();

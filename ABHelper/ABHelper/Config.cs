@@ -11,7 +11,7 @@ namespace ABHelper
     {
         public const string VersionFileName         = "Version.txt";                // 记录各个bundle的hash，方便对比差异，确定下载
         public const string AssetFileInfo           = "AssetFileInfo.txt";          // version以及 Asset名字:HashCode
-        public const string AssetRelevanceBundle    = "AssetRelevanceBundle.txt";   // 记录asset与bundle的包含关系，哪个bundle里面有哪个bundle
+        public const string AssetRelevanceBundle    = "AssetRelevanceBundle.txt";   // 记录asset与bundle的包含关系，哪个bundle里面有哪个asset
         public const string BuildedFolderFileName   = "BuildedFolder.txt";          // 记录所有的打包的文件夹路径
         public const string BundleNameFileName      = "BundleName.txt";             // 记录所有的打包的bundle的名称
 
@@ -36,9 +36,15 @@ namespace ABHelper
             {
                 _NativePathRoot = Application.persistentDataPath + ABFolderName + CurrentPlatformName;
             }
-
             return _NativePathRoot + "/" + path;
             //return Path.Combine(Application.persistentDataPath, GetPlatform(Application.platform));//这里使用Path.Combine结合符为\而不是/
+        }
+        /// <summary>
+        /// 包里面的路径为：streamingAssetsPath + path
+        /// </summary>
+        public static string GetPackagePath(string path)
+        {
+            return Application.streamingAssetsPath + "/" + path;
         }
 
         private static string _CurrentPlatformName;

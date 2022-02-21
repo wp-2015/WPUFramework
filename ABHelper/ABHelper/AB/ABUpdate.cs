@@ -111,7 +111,7 @@ namespace ABHelper
 
         private void UpdateFinish()
         {
-            ABManager.Init();
+            ABManager.InitWithUpdate();
             Destroy(this.gameObject);
         }
 

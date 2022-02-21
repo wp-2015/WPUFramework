@@ -8,6 +8,7 @@ namespace ABHelper
     public enum TargetPlatform { Window = BuildTarget.StandaloneWindows64, Android = BuildTarget.Android, IOS = BuildTarget.iOS }
     public partial class BuildScript
     {
+        private static Dictionary<string, string> AssetRelevanceBundle = new Dictionary<string, string>();
         public static void CheckPlatformAndBuild()
         {
             var abManifest = AssetsUtils.GetAssetFile<ABManifest>(Config.ABManifestAssetPath);
@@ -62,6 +63,10 @@ namespace ABHelper
             {
                 var bundleName = item.Key;
                 var assetToBuild = item.Value;
+                foreach (var asset in assetToBuild)
+                {
+                    AssetRelevanceBundle[asset] = bundleName;
+                }
                 waitforBuild[bundleName] = assetToBuild;
             }
 
@@ -93,6 +98,13 @@ namespace ABHelper
             var manifest = BuildPipeline.BuildAssetBundles(outputFolder, builds.ToArray(), 
                                 abManifest.BuildOptions, EditorUserBuildSettings.activeBuildTarget);
 
+            //Asset与bundle的包含关系文件
+            var bundleRelevanceAssetPath = abManifest.OutputPlatformFolder + "/" + Config.AssetRelevanceBundle;
+            var buildedfolderFilePath = abManifest.OutputPlatformFolder + "/" + Config.BuildedFolderFileName;
+            var bundleNameFilePath = abManifest.OutputPlatformFolder + "/" + Config.BundleNameFileName;
+            SaveAssetRelevanceBundle(bundleRelevanceAssetPath, buildedfolderFilePath, bundleNameFilePath);
+            MakeAllFileMD5(abManifest.OutputPlatformFolder);
+
             EditorUtility.DisplayProgressBar("ABHelper", "生成本次打包记录文件", 1);
 
             if (EditorUtility.DisplayDialog("ABHelper", "AssetBundle打包完成, 是否需要打开输出文件", "打开", "取消"))
@@ -100,6 +112,19 @@ namespace ABHelper
                 EditorUtility.OpenWithDefaultApp(outputFolder);
             }
             EditorUtility.ClearProgressBar();
+        }
+
+        public static void MakeAllFileMD5(string path)
+        {
+            var normalPath = path.Replace(@"\", "/") + "/";
+            List<string> versions = new List<string>();
+            PathUtils.TravelDirectory(path, (dir, name) =>
+            {
+                if (name.Contains(Config.AssetFileInfo)) return;
+                var fullName = (dir + "/" + name).Replace(@"\", "/");
+                versions.Add(fullName.Replace(normalPath, "") + ":" + UtilsEditor.GetFileCertificate(fullName));
+            });
+            UtilsEditor.ListToTxt(path + "/" + Config.VersionFileName, versions);
         }
 
         /// <summary>
