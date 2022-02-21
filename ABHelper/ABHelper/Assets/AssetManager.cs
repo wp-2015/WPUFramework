@@ -5,10 +5,10 @@ using UnityEditor;
 
 namespace ABHelper
 {
-    public class AssetManager
+    public static class AssetManager
     {
         private static bool bIsUseAssetBundle;
-        public AssetManager()
+        static AssetManager()
         {
             bIsUseAssetBundle = IsUseAssetBundle;
         }
@@ -26,6 +26,7 @@ namespace ABHelper
         public static T Load<T>(string path) where T : Object
         {
 #if UNITY_EDITOR
+            Debug.LogError(bIsUseAssetBundle);
             if (!bIsUseAssetBundle)
             {
                 return (T)AssetDatabase.LoadAssetAtPath<T>(path);
@@ -63,6 +64,10 @@ namespace ABHelper
             set
             {
                 string res = value ? "ON" : "OFF";
+                if (res == "OFF")
+                    Debug.Log("开始直接加载资源");
+                else
+                    Debug.Log("使用AB模式加载资源");
                 PlayerPrefs.SetString("UseAssetBundle", res);
             }
         }
