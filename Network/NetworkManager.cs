@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 
 namespace Netwrok
@@ -7,7 +8,7 @@ namespace Netwrok
     {
         private static Dictionary<string, NetworkChannel> dicNetworkChannel = new Dictionary<string, NetworkChannel>();
 
-        public static void Connect(string channelName, string ip, int port, bool isIpHostName = false)
+        public static void Connect(string channelName, string ip, int port, bool isIpHostName = false, Action successCB = null, Action failCB = null, Action closeCB = null)
         {
             if(dicNetworkChannel.TryGetValue(channelName, out NetworkChannel channel))
             {
@@ -25,9 +26,10 @@ namespace Netwrok
                 ipAddress = IPAddress.Parse(ip);
             }
 
-            dicNetworkChannel[channelName] = new NetworkChannel(ipAddress, port, ()=> 
+            dicNetworkChannel[channelName] = new NetworkChannel(ipAddress, port, successCB, failCB, ()=> 
             {
                 dicNetworkChannel.Remove(channelName);
+                closeCB();
             });
         }
 

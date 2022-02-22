@@ -26,6 +26,8 @@ namespace Netwrok
         //默认字节流长度
         private const int DefaultBufferLength = 1024;
         private Action closeCB;
+        private Action successCB;
+        private Action failCB;
 
         const int HeadLength = 4;
 
@@ -38,22 +40,34 @@ namespace Netwrok
         /***************************************接收使用**********************************/
         private MemoryStream memoryStreamReceive = new MemoryStream(DefaultBufferLength);
 
-        public NetworkChannel(IPAddress ipAddress, int port, Action closeCB)
+        public NetworkChannel(IPAddress ipAddress, int port, Action successCB = null, Action failCB = null, Action closeCB = null)
         {
             Socket = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             Socket.BeginConnect(ipAddress, port, ConnectCB, null);
+            
+            this.closeCB = closeCB;
+            this.successCB = successCB;
+            this.failCB = failCB;
         }
 
         private void ConnectCB(IAsyncResult ar)
         {
-            //ReceiveAsync();//异步
-            //发送需要用到的初始化
-            memoryStreamSend.Position = 0;
-            //接收需要用到的初始化
-            memoryStreamReceive.Position = 0;
-            bIsReceiveHead = true;
-            memoryStreamReceive.SetLength(HeadLength);
-            ReceiveAsync();
+            Socket s = ar.AsyncState as Socket;
+            if(s.Connected)
+            {
+                successCB?.Invoke();
+                //发送需要用到的初始化
+                memoryStreamSend.Position = 0;
+                //接收需要用到的初始化
+                memoryStreamReceive.Position = 0;
+                bIsReceiveHead = true;
+                memoryStreamReceive.SetLength(HeadLength);
+                ReceiveAsync();
+            }
+            else
+            {
+                failCB?.Invoke();
+            }
         }
 
         public void Send(Packet packet)
@@ -78,7 +92,6 @@ namespace Netwrok
                     memoryStreamSend.Position = 0;
                     SendStream();
                 }
-                //ReceiveAsync();//同步
             }
             while(lMessageWait.Count > 0)
             {
@@ -220,44 +233,6 @@ namespace Netwrok
             memoryStreamReceive.Position = 0L;
             ReceiveAsync();
         }
-
-        //private bool ReceiveSync()
-        //{
-
-        //    memoryStreamReceive.Position = 0;
-        //    //var bs = new byte[10000];
-        //    //int bytesReceived = Socket.Receive(bs);
-
-
-        //    int bytesReceived = Socket.Receive(memoryStreamReceive.GetBuffer(),
-        //        (int)memoryStreamReceive.Position, (int)(memoryStreamReceive.Length - memoryStreamReceive.Position), SocketFlags.None);
-        //    if (bytesReceived <= 0)
-        //    {
-        //        return false;
-        //    }
-        //    memoryStreamReceive.Position += bytesReceived;
-
-        //    if (memoryStreamReceive.Position < memoryStreamReceive.Length)
-        //    {
-        //        return false;
-        //    }
-        //    //接收数据完毕
-        //    memoryStreamReceive.Position = 0L;
-        //    //大小
-        //    byte[] messageSizeBytes = new byte[4];
-        //    memoryStreamReceive.Read(messageSizeBytes, 0, 4);
-        //    int messageSize = BitConverter.ToInt32(messageSizeBytes, 0);
-        //    //ID
-        //    byte[] messageIdBytes = new byte[2];
-        //    memoryStreamReceive.Read(messageIdBytes, 0, 2);
-        //    int id = BitConverter.ToInt32(messageIdBytes, 0);
-        //    //message
-        //    byte[] messageBytes = new byte[messageSize];
-        //    memoryStreamReceive.Read(messageBytes, 0, messageBytes.Length);
-        //    ServerListener.Handler((MSGTYPE)id, messageBytes);
-        //    return true;
-        //}
-
         /*************************************************************接收数据*************************************************************/
         #endregion
 
@@ -276,6 +251,7 @@ namespace Netwrok
             memoryStreamReceive.Close();
             memoryStreamSend.Close();
             sendPacketPool.Clear();
+            closeCB?.Invoke();
         }
         /*************************************************************Socket*************************************************************/
         #endregion

@@ -14,7 +14,16 @@ public class WPUFrameworkEntry : MonoBehaviour
     //Á´½ÓSocket
     public static void ConnectSocket()
     {
-        NetworkManager.Connect("Main", "127.0.0.1", 8999, false);
-        
+        NetworkManager.Connect("Main", "127.0.0.1", 8999, false, ProxyInit);
+    }
+
+    public void Update()
+    {
+        NetworkManager.Update();
+    }
+
+    public static void ProxyInit()
+    {
+
     }
 }
