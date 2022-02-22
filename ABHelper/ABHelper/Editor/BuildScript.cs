@@ -74,10 +74,6 @@ namespace ABHelper
             List<AssetBundleBuild> builds = new List<AssetBundleBuild>();
             foreach (var ab in waitforBuild)
             {
-                foreach(var a in ab.Value)
-                {
-                    Debug.Log(ab.Key + "    " + a);
-                }
                 builds.Add(new AssetBundleBuild()
                 {
                     assetBundleName = ab.Key,

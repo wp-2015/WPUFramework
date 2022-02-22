@@ -22,10 +22,10 @@ namespace ABHelper
             {
                 var assetName = assetWithBundle.Key;
                 var bundleName = assetWithBundle.Value;
-                var folderPath = Path.GetDirectoryName(assetName).Replace("\\\\", "/").Replace('\\', '/');
+                var folderPath = Path.GetDirectoryName(assetName).ToLower().Replace("\\\\", "/").Replace('\\', '/');
                 var folderIndex = ArrayUtility.FindIndex(folders, (iterator) => { return iterator == folderPath; });
                 if (folderIndex == -1)
-                {
+                { 
                     ArrayUtility.Add(ref folders, folderPath);
                     folderIndex = folders.Length - 1;
                 }

@@ -46,7 +46,7 @@ namespace ABHelper
         public static string GetFilePath(string path)
         {
             var nativePath = GetNativePath(path);
-            if(File.Exists(path))//如果persistentDataPath存在
+            if(File.Exists(nativePath))//如果persistentDataPath存在
             {
                 return nativePath;
             }

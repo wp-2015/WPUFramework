@@ -44,7 +44,9 @@ namespace ABHelper
         public void BundleUpdate()
         {
             WebAsset webAsset = null;
-            webAsset = WebAssetManager.Load(Config.GetServerPath(_RootURL, Config.VersionFileName), (msg)=>
+            var path = Config.GetServerPath(_RootURL, Config.VersionFileName);
+            Debug.Log(string.Format("Server AB Path: {0}", path));
+            webAsset = WebAssetManager.Load(path, (msg)=>
             {
                 //远端的version文件
                 var text = (string)msg;

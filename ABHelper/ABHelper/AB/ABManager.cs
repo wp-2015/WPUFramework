@@ -125,7 +125,7 @@ namespace ABHelper
 
         private static string GetAssetBundleName(string assetName)
         {
-            var dir = Path.GetDirectoryName(assetName).ToLower();
+            var dir = Path.GetDirectoryName(assetName).ToLower().Replace("\\\\", "/").Replace('\\', '/');
             var name = Path.GetFileName(assetName);
             List<AssetInfo> assetList;
             if (_AssetRelevanceBundle.TryGetValue(name, out assetList))
