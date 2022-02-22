@@ -44,7 +44,7 @@ namespace ABHelper
         public void BundleUpdate()
         {
             WebAsset webAsset = null;
-            var path = Config.GetServerPath(_RootURL, Config.VersionFileName);
+            var path = ABConfig.GetServerPath(_RootURL, ABConfig.VersionFileName);
             Debug.Log(string.Format("Server AB Path: {0}", path));
             webAsset = WebAssetManager.Load(path, (msg)=>
             {
@@ -56,16 +56,16 @@ namespace ABHelper
                 for (int i = 0; i < items.Length; i++)
                 {
                     var version = items[i].Split(':');
-                    if(version.Length > 1 && version[0] != Config.VersionFileName) //对比文件差异时排除version文件
+                    if(version.Length > 1 && version[0] != ABConfig.VersionFileName) //对比文件差异时排除version文件
                         newABVersions[version[0]] = version[1];
                 }
                 //已经更新过的version文件
                 Dictionary<string, string> nativeABVersions = new Dictionary<string, string>();
-                var nativePath = Config.GetNativePath(Config.VersionFileName);
+                var nativePath = ABConfig.GetNativePath(ABConfig.VersionFileName);
                 UtilsRuntime.TxtToDic(nativePath, nativeABVersions);
                 //打在包里的version文件
                 Dictionary<string, string> packageABVersions = new Dictionary<string, string>();
-                var packagePath = Config.GetPackagePath(Config.VersionFileName);
+                var packagePath = ABConfig.GetPackagePath(ABConfig.VersionFileName);
                 UtilsRuntime.TxtToDic(packagePath, packageABVersions);
                 //两边的version文件综合起来
                 foreach(var version in packageABVersions)
@@ -103,7 +103,7 @@ namespace ABHelper
                     var bundleName = versions.Key;
                     var version = versions.Value;
                     _UpdateABCount++;
-                    DownloadManager.Download(Config.GetServerPath(_RootURL, bundleName), Config.GetNativePath(bundleName), delegate
+                    DownloadManager.Download(ABConfig.GetServerPath(_RootURL, bundleName), ABConfig.GetNativePath(bundleName), delegate
                     {
                         _UpdateABIndex++;
                         _ProcessChangeCB?.Invoke((float)_UpdateABIndex / _UpdateABCount);

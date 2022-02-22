@@ -12,21 +12,10 @@ namespace ABHelper
         {
             bIsUseAssetBundle = IsUseAssetBundle;
         }
-//        public static UnityEngine.Object Load(string path)
-//        {
-//#if UNITY_EDITOR
-//            if(!IsUseAssetBundle)
-//            {
-//                 return Editor.Instantiate<GameObject>(AssetDatabase.LoadAssetAtPath<GameObject>(path));
-//            }
-//#endif
-//            return ABManager.Load(path);
-//        }
-
+         
         public static T Load<T>(string path) where T : Object
         {
 #if UNITY_EDITOR
-            Debug.LogError(bIsUseAssetBundle);
             if (!bIsUseAssetBundle)
             {
                 return (T)AssetDatabase.LoadAssetAtPath<T>(path);

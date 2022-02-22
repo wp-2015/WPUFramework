@@ -2,15 +2,9 @@
 
 namespace ABHelper
 {
-    public static partial class Config
+    public static class PlatformUtils
     {
         /************************************Path************************************/
-        public const string ABManifestAssetPath     = "Assets/ABManifest.asset";
-        public const string AssetFileInfo           = "AssetFileInfo.txt";              // version以及 Asset名字:HashCode
-        public const string AssetRelevanceBundle    = "AssetRelevanceBundle.txt";       // 记录asset与bundle的包含关系，哪个bundle里面有哪个asset
-        public const string BuildedFolderFileName   = "BuildedFolder.txt";              // 记录所有的打包的文件夹路径
-        public const string BundleNameFileName      = "BundleName.txt";                 // 记录所有的打包的bundle的名称
-        public const string VersionFileName         = "Version.txt";                    // 记录所有需要更新的文件的hash，用来检测该文件是否需要从服务器下载
 
         public static string GetPlatformName()
         {

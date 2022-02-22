@@ -60,7 +60,7 @@ namespace ABHelper
             get
             {
                 // 返回自定义设置的ab文件输出目录加上平台的文件夹路径
-                return PathUtils.MakeAbsolutePath(OutputFolder, Application.dataPath) + "/" + Config.GetPlatformName();
+                return PathUtils.MakeAbsolutePath(OutputFolder, Application.dataPath) + "/" + PlatformUtils.GetPlatformName();
             }
         }
 

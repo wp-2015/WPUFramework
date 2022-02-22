@@ -23,7 +23,7 @@ namespace ABHelper
 
         private void OnEnable()
         {
-            _ABManifest = AssetsUtils.GetAssetFile<ABManifest>(Config.ABManifestAssetPath);
+            _ABManifest = AssetsUtils.GetAssetFile<ABManifest>(BuildScript.ABManifestAssetPath);
             _OutputFolderAbsolutePath = PathUtils.MakeAbsolutePath(_ABManifest.OutputFolder, Application.dataPath);
             _BuildOptionsShowStr = _ABManifest.BuildOptions.ToString();
         }
@@ -39,7 +39,7 @@ namespace ABHelper
             }
             if(GUILayout.Button("重新读取配置文件"))
             {
-                _ABManifest = AssetsUtils.GetAssetFile<ABManifest>(Config.ABManifestAssetPath);
+                _ABManifest = AssetsUtils.GetAssetFile<ABManifest>(BuildScript.ABManifestAssetPath);
             }
             EditorGUILayout.EndHorizontal();
 

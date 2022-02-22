@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
-using UnityEngine;
 
 namespace ABHelper
 {
@@ -9,9 +8,11 @@ namespace ABHelper
     public partial class BuildScript
     {
         private static Dictionary<string, string> AssetRelevanceBundle = new Dictionary<string, string>();
+
+        public const string ABManifestAssetPath = "Assets/ABManifest.asset";
         public static void CheckPlatformAndBuild()
         {
-            var abManifest = AssetsUtils.GetAssetFile<ABManifest>(Config.ABManifestAssetPath);
+            var abManifest = AssetsUtils.GetAssetFile<ABManifest>(ABManifestAssetPath);
             if ((int)abManifest.BuildTargetPlatform == (int)EditorUserBuildSettings.activeBuildTarget)
             {
                 Build();
@@ -32,7 +33,7 @@ namespace ABHelper
             //打包之前需要确定manifest文件
             MakeABManifest();
             EditorUtility.DisplayProgressBar("ABHelper", "重新生成配置文件", 1);
-            var abManifest = AssetsUtils.GetAssetFile<ABManifest>(Config.ABManifestAssetPath);
+            var abManifest = AssetsUtils.GetAssetFile<ABManifest>(ABManifestAssetPath);
             //检查配置文件的有效行
             abManifest.CheckAssetDatasValid();
 
@@ -95,9 +96,9 @@ namespace ABHelper
                                 abManifest.BuildOptions, EditorUserBuildSettings.activeBuildTarget);
 
             //Asset与bundle的包含关系文件
-            var bundleRelevanceAssetPath = abManifest.OutputPlatformFolder + "/" + Config.AssetRelevanceBundle;
-            var buildedfolderFilePath = abManifest.OutputPlatformFolder + "/" + Config.BuildedFolderFileName;
-            var bundleNameFilePath = abManifest.OutputPlatformFolder + "/" + Config.BundleNameFileName;
+            var bundleRelevanceAssetPath = abManifest.OutputPlatformFolder + "/" + ABConfig.AssetRelevanceBundle;
+            var buildedfolderFilePath = abManifest.OutputPlatformFolder + "/" + ABConfig.BuildedFolderFileName;
+            var bundleNameFilePath = abManifest.OutputPlatformFolder + "/" + ABConfig.BundleNameFileName;
             SaveAssetRelevanceBundle(bundleRelevanceAssetPath, buildedfolderFilePath, bundleNameFilePath);
             MakeAllFileMD5(abManifest.OutputPlatformFolder);
 
@@ -116,11 +117,11 @@ namespace ABHelper
             List<string> versions = new List<string>();
             PathUtils.TravelDirectory(path, (dir, name) =>
             {
-                if (name.Contains(Config.AssetFileInfo)) return;
+                if (name.Contains(ABConfig.AssetFileInfo)) return;
                 var fullName = (dir + "/" + name).Replace(@"\", "/");
                 versions.Add(fullName.Replace(normalPath, "") + ":" + UtilsEditor.GetFileCertificate(fullName));
             });
-            UtilsEditor.ListToTxt(path + "/" + Config.VersionFileName, versions);
+            UtilsEditor.ListToTxt(path + "/" + ABConfig.VersionFileName, versions);
         }
 
         /// <summary>

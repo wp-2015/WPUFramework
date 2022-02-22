@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ABHelper
 {
-    public static class Config
+    public static partial class ABConfig
     {
         public const string VersionFileName         = "Version.txt";                // 记录各个bundle的hash，方便对比差异，确定下载
         public const string AssetFileInfo           = "AssetFileInfo.txt";          // version以及 Asset名字:HashCode

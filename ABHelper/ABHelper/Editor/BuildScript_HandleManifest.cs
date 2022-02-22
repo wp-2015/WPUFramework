@@ -9,7 +9,7 @@ namespace ABHelper
         /// </summary>
         public static void MakeABManifest()
         {
-            ABManifest abManifest = AssetsUtils.GetAssetFile<ABManifest>(Config.ABManifestAssetPath);
+            ABManifest abManifest = AssetsUtils.GetAssetFile<ABManifest>(ABManifestAssetPath);
             abManifest.Reset();
             var dirs = abManifest.TargetDirs;
             var ignoreList = abManifest.IgnoreFileType;

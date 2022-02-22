@@ -45,13 +45,13 @@ namespace ABHelper
         /// </summary>
         public static void InitWithUpdate()
         {
-            var buildedFolderFileName = Config.GetFilePath(Config.BuildedFolderFileName);
+            var buildedFolderFileName = ABConfig.GetFilePath(ABConfig.BuildedFolderFileName);
             _BuildedFoldArray = UtilsRuntime.TxtToList(buildedFolderFileName).ToArray();
            
-            var bundleNameFile = Config.GetFilePath(Config.BundleNameFileName);
+            var bundleNameFile = ABConfig.GetFilePath(ABConfig.BundleNameFileName);
             _BundleNameArray = UtilsRuntime.TxtToList(bundleNameFile).ToArray();
 
-            var assetRelevanceBundleFile = Config.GetFilePath(Config.AssetRelevanceBundle);
+            var assetRelevanceBundleFile = ABConfig.GetFilePath(ABConfig.AssetRelevanceBundle);
             using (var s = new StreamReader(assetRelevanceBundleFile))
             {
                 string line;
@@ -77,7 +77,7 @@ namespace ABHelper
                 }
             }
 
-            AssetBundle abPlatform = AssetBundle.LoadFromFile(Config.GetFilePath(Config.CurrentPlatformName));
+            AssetBundle abPlatform = AssetBundle.LoadFromFile(ABConfig.GetFilePath(ABConfig.CurrentPlatformName));
             if (null != abPlatform)
             {
                 _AssetBundleManifest = abPlatform.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
@@ -211,7 +211,7 @@ namespace ABHelper
             }
             else
             {
-                res = AssetBundle.LoadFromFile(Config.GetFilePath(bundleName));
+                res = AssetBundle.LoadFromFile(ABConfig.GetFilePath(bundleName));
                 info = new BundleInfo(res);
                 _BundleReference.Add(bundleName, info);
             }
