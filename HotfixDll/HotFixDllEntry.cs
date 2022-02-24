@@ -32,13 +32,13 @@ namespace WPUFramework
 
         public static void Init(System.Action<AppDomain> loadHotfixDelegate)
         {
-            var fs = AssetManager.Load<TextAsset>("Assets/ABRes/HotfixDLL/Hotfix.dll");
-            var p = AssetManager.Load<TextAsset>("Assets/ABRes/HotfixDLL/Hotfix.pdb");
+            var fs = AssetManager.Load<TextAsset>("Assets/ABRes/HotfixDLL/Hotfix.dll.bytes");
+            var p = AssetManager.Load<TextAsset>("Assets/ABRes/HotfixDLL/Hotfix.pdb.bytes");
 
             AppDomain = new ILRuntime.Runtime.Enviorment.AppDomain();
             PreAddDelegate(AppDomain);
             loadHotfixDelegate?.Invoke(AppDomain);
-            AppDomain.LoadAssembly(new MemoryStream(fs.bytes), new MemoryStream(p.bytes), new PdbReaderProvider());
+            //AppDomain.LoadAssembly(new MemoryStream(fs.bytes), new MemoryStream(p.bytes), new PdbReaderProvider());
 
 #if !ILRuntime
             Debug.Log("运行的ILRuntime模式");

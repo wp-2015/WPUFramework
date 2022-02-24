@@ -28,6 +28,7 @@ namespace Netwrok
         private Action closeCB;
         private Action successCB;
         private Action failCB;
+        public string ChannelName;
 
         const int HeadLength = 4;
 

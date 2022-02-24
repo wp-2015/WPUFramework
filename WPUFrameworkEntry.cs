@@ -7,11 +7,17 @@ namespace WPUFramework
 {
     public class WPUFrameworkEntry : MonoBehaviour
     {
-        private System.Action<AppDomain> loadHotfixDelegate;
-        public void Entry(System.Action<AppDomain> loadHotfixDelegate)
+        private static System.Action<AppDomain> loadHotfixDelegate;
+        public static void Entry(System.Action<AppDomain> loadHotfixDelegate)
         {
-            this.loadHotfixDelegate = loadHotfixDelegate;
-
+            loadHotfixDelegate = loadHotfixDelegate;
+            var instance = FindObjectOfType<WPUFrameworkEntry>();
+            if (instance == null)
+            {
+                var go = new GameObject("WPUFrameworkEntry");
+                go.AddComponent<WPUFrameworkEntry>();
+                DontDestroyOnLoad(go);
+            }
 
         }
 
@@ -46,7 +52,7 @@ namespace WPUFramework
         //更新资源
         public static void UpdateAsset(string ip, System.Action<float> processChangeCB = null)
         {
-            ABUpdate.Start("10.21.249.136", processChangeCB);
+            ABUpdate.Start("10.21.249.136", false, processChangeCB);
         }
 
         //链接Socket

@@ -11,6 +11,7 @@ namespace ABHelper
         static AssetManager()
         {
             bIsUseAssetBundle = IsUseAssetBundle;
+            Debug.LogError(string.Format("是否正在使用AB模式:{0}", bIsUseAssetBundle));
         }
          
         public static T Load<T>(string path) where T : Object

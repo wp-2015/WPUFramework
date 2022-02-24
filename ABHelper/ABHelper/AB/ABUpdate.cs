@@ -25,8 +25,13 @@ namespace ABHelper
         /// <summary>
         /// 这里回调中的process为已经更新的bundle数量/总的需要更新的bundle数量
         /// </summary>
-        public static void Start(string rootURL, Action<float> processChangeCB = null)
+        public static void Start(string rootURL, bool needUpdate = true, Action<float> processChangeCB = null)
         {
+            if(!needUpdate)
+            {
+                ABManager.InitWithUpdate();
+                return;
+            }
             _RootURL = rootURL;
             var instance = FindObjectOfType<ABUpdate>();
             if(instance == null)

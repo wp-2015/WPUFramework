@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 
@@ -29,7 +30,7 @@ namespace Netwrok
             dicNetworkChannel[channelName] = new NetworkChannel(ipAddress, port, successCB, failCB, ()=> 
             {
                 dicNetworkChannel.Remove(channelName);
-                closeCB();
+                closeCB?.Invoke();
             });
         }
 
