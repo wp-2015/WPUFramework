@@ -30,8 +30,15 @@ namespace Netwrok
             dicNetworkChannel[channelName] = new NetworkChannel(ipAddress, port, successCB, failCB, ()=> 
             {
                 dicNetworkChannel.Remove(channelName);
+                CoroutineManager.StartCoroutine(RemoveChannel(channelName));
                 closeCB?.Invoke();
             });
+        }
+
+        private static IEnumerator RemoveChannel(string channelName)
+        {
+            yield return null;
+            dicNetworkChannel.Remove(channelName);
         }
 
         public static void SendMessage(string channelName, Packet packet)

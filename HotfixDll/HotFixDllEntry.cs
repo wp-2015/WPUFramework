@@ -36,11 +36,14 @@ namespace WPUFramework
             var p = AssetManager.Load<TextAsset>("Assets/ABRes/HotfixDLL/Hotfix.pdb.bytes");
 
             AppDomain = new ILRuntime.Runtime.Enviorment.AppDomain();
-            PreAddDelegate(AppDomain);
+
+            HotfixRegister.RegisterAdaptor(AppDomain);
+            HotfixRegister.InitILRuntime(AppDomain);
+
             loadHotfixDelegate?.Invoke(AppDomain);
             //AppDomain.LoadAssembly(new MemoryStream(fs.bytes), new MemoryStream(p.bytes), new PdbReaderProvider());
 
-#if !ILRuntime
+#if ILRuntime
             Debug.Log("运行的ILRuntime模式");
             AppDomain.LoadAssembly(new MemoryStream(fs.bytes), new MemoryStream(p.bytes), new PdbReaderProvider());
             start = new ILStaticMethod(AppDomain, "Hotfix.HotfixEntry", "Start", 0);
@@ -92,15 +95,6 @@ namespace WPUFramework
         public static void OnDestroy()
         {
             onDestroy?.Invoke();
-        }
-
-        private static void PreAddDelegate(AppDomain appDomain)
-        {
-            appDomain.DelegateManager.RegisterMethodDelegate<float>();
-            appDomain.DelegateManager.RegisterMethodDelegate<bool, int>();
-            appDomain.DelegateManager.RegisterMethodDelegate<object>();
-            appDomain.DelegateManager.RegisterMethodDelegate<Vector2>();
-            appDomain.DelegateManager.RegisterMethodDelegate<Vector3>();
         }
     }
 

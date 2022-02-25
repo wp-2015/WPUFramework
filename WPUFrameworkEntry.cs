@@ -26,6 +26,7 @@ namespace WPUFramework
             UpdateAsset("");
             ConnectSocket();
             HotFixDllEntry.Init(loadHotfixDelegate);
+            CoroutineManager.Init(this);
         }
 
         private void Start()

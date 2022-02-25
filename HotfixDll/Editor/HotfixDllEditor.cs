@@ -1,6 +1,7 @@
 using System.IO;
 using UnityEditor;
 using UnityEngine;
+using WPUFramework;
 
 public class HotfixDllEditor
 {
@@ -43,6 +44,7 @@ public class HotfixDllEditor
         {
             domain.LoadAssembly(fs);
             //Crossbind Adapter is needed to generate the correct binding code
+            HotfixRegister.RegisterAdaptor(domain);
             //ILRuntimeHelper.RegisterAdaptor(domain);
             ILRuntime.Runtime.CLRBinding.BindingCodeGenerator.GenerateBindingCode(domain, "Assets/Scripts/GameMain/ILRuntime/Generated");
             AssetDatabase.Refresh();
