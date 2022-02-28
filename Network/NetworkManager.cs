@@ -29,7 +29,6 @@ namespace Netwrok
 
             dicNetworkChannel[channelName] = new NetworkChannel(ipAddress, port, successCB, failCB, ()=> 
             {
-                dicNetworkChannel.Remove(channelName);
                 CoroutineManager.StartCoroutine(RemoveChannel(channelName));
                 closeCB?.Invoke();
             });
@@ -37,7 +36,7 @@ namespace Netwrok
 
         private static IEnumerator RemoveChannel(string channelName)
         {
-            yield return null;
+            yield return null;// new WaitForEndOfFrame();
             dicNetworkChannel.Remove(channelName);
         }
 
@@ -48,7 +47,7 @@ namespace Netwrok
 
         public static void Update()
         {
-            foreach(var channel in dicNetworkChannel)
+            foreach (var channel in dicNetworkChannel)
             {
                 channel.Value.Update();
             }

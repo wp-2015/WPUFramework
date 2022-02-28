@@ -67,6 +67,7 @@ namespace Netwrok
             }
             else
             {
+                Close();
                 failCB?.Invoke();
             }
         }
@@ -81,7 +82,6 @@ namespace Netwrok
             if (null == Socket || !Socket.Connected)
             {
                 Close();
-                closeCB?.Invoke();
             }
             while (sendPacketPool.Count > 0)
             {
